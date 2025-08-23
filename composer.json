@@ -13,9 +13,11 @@
         "inertiajs/inertia-laravel": "^2.0",
         "laravel/framework": "^12.0",
         "laravel/tinker": "^2.10.1",
+        "predis/predis": "^3.2",
         "tightenco/ziggy": "^2.4"
     },
     "require-dev": {
+        "barryvdh/laravel-debugbar": "^3.16",
         "barryvdh/laravel-ide-helper": "^3.6",
         "fakerphp/faker": "^1.23",
         "larastan/larastan": "^3.0",
@@ -26,7 +28,8 @@
         "nunomaduro/collision": "^8.6",
         "pestphp/pest": "^4.0",
         "pestphp/pest-plugin-laravel": "^4.0",
-        "phpstan/phpstan": "^2.1"
+        "phpstan/phpstan": "^2.1",
+        "rector/rector": "^2.1"
     },
     "autoload": {
         "psr-4": {
@@ -41,8 +44,21 @@
         }
     },
     "scripts": {
+        "format": [
+            "./vendor/bin/pint"
+        ],
         "phpstan": [
-            "./vendor/bin/phpstan analyse"
+            "composer config --global process-timeout 10000",
+            "./vendor/bin/phpstan analyse -c phpstan.neon --memory-limit=6G -v > code_analyse_output.txt"
+        ],
+        "rector": [
+            "./vendor/bin/rector process --dry-run --config rector.php > code_rector_output.txt"
+        ],
+        "rector-full": [
+            "./vendor/bin/rector process --dry-run --clear-cache --config rector.php > code_rector_output.txt"
+        ],
+        "rector-write": [
+            "./vendor/bin/rector process --config rector.php"
         ],
         "post-autoload-dump": [
             "Illuminate\\Foundation\\ComposerScripts::postAutoloadDump",
