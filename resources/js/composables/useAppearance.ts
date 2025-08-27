@@ -1,4 +1,4 @@
-import { onMounted, ref } from 'vue';
+import { onMounted, ref, computed } from 'vue';
 
 type Appearance = 'light' | 'dark' | 'system';
 
@@ -85,8 +85,20 @@ export function useAppearance() {
         updateTheme(value);
     }
 
+    const isDark = computed(() => {
+        if (appearance.value === 'dark') return true
+        if (appearance.value === 'light') return false
+
+        // Handle 'system'
+        if (typeof window !== 'undefined') {
+            return window.matchMedia('(prefers-color-scheme: dark)').matches
+        }
+        return false
+    })
+
     return {
         appearance,
         updateAppearance,
+        isDark,
     };
 }
