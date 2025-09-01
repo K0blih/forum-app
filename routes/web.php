@@ -1,5 +1,12 @@
 <?php
 
+use App\Http\Controllers\PostController;
+use App\Http\Resources\CommentResource;
+use App\Http\Resources\PostResource;
+use App\Http\Resources\UserResource;
+use App\Models\Comment;
+use App\Models\Post;
+use App\Models\User;
 use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
 
@@ -10,6 +17,17 @@ Route::get('/', function () {
 Route::get('dashboard', function () {
     return Inertia::render('Dashboard');
 })->middleware(['auth', 'verified'])->name('dashboard');
+
+Route::get('posts', [PostController::class, 'index'])->name('posts.index');
+
+// Route::get('test', function() {
+//    return [
+//        UserResource::make(User::find(6)),
+//        PostResource::make(Post::find(1)),
+//        CommentResource::make(Comment::find(1)),
+//    ];
+//
+// });
 
 require __DIR__.'/settings.php';
 require __DIR__.'/auth.php';

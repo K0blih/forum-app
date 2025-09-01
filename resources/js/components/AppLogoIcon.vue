@@ -18,6 +18,6 @@ defineProps<Props>();
 </script>
 
 <template>
-    <img v-if="isDark" :src="LogoWhite" alt="logo"/>
-    <img v-else :src="LogoDark" alt="logo"/>
+    <img v-if="isDark" :src="LogoWhite" alt="Logo"/>
+    <img v-else :src="LogoDark" alt="Logo"/>
 </template>

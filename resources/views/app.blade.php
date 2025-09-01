@@ -32,9 +32,9 @@
 
         <title inertia>{{ config('app.name', 'Laravel') }}</title>
 
-        <link rel="icon" href="/assets/logo.svg" sizes="any">
-        <link rel="icon" href="/assets/logo.svg" type="image/svg+xml">
-        <link rel="apple-touch-icon" href="/assets/logo.svg>
+        <link rel="icon" href="{{ Vite::asset('resources/js/assets/logo-white.svg') }}" sizes="any">
+        <link rel="icon" href="{{ Vite::asset('resources/js/assets/logo-white.svg') }}" type="image/svg+xml">
+        <link rel="apple-touch-icon" href="{{ Vite::asset('resources/js/assets/logo-white.svg') }}">
 
         <link rel="preconnect" href="https://fonts.bunny.net">
         <link href="https://fonts.bunny.net/css?family=instrument-sans:400,500,600" rel="stylesheet" />

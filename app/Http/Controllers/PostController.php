@@ -2,16 +2,20 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Resources\PostResource;
 use App\Models\Post;
-use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
+use Inertia\Inertia;
+use Inertia\Response;
 
 class PostController extends Controller
 {
-    public function index(): Collection
+    public function index(): Response
     {
-        return Post::all();
+        return Inertia::render('posts/Index', [
+            'posts' => PostResource::collection(Post::paginate(10)),
+        ]);
     }
 
     public function store(Request $request): Post
