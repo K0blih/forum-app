@@ -14,7 +14,7 @@ class PostController extends Controller
     public function index(): Response
     {
         return Inertia::render('posts/Index', [
-            'posts' => PostResource::collection(Post::paginate(10)),
+            'posts' => PostResource::collection(Post::with('user')->latest()->paginate()),
         ]);
     }
 
@@ -28,9 +28,13 @@ class PostController extends Controller
         return Post::create($data);
     }
 
-    public function show(Post $post): Post
+    public function show(Post $post): Response
     {
-        return $post;
+        $post->load('user');
+
+        return Inertia::render('posts/Show', [
+            'post' => PostResource::make($post),
+        ]);
     }
 
     public function update(Request $request, Post $post): Post
