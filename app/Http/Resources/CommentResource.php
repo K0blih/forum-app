@@ -3,6 +3,7 @@
 namespace App\Http\Resources;
 
 use App\Models\Comment;
+use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\JsonResource;
 
@@ -20,11 +21,11 @@ class CommentResource extends JsonResource
     {
         return [
             'id' => $this->id,
-            'user' => UserResource::make($this->user),
-            'post' => PostResource::make($this->post),
+            'user' => $this->whenLoaded('user', fn () => UserResource::make($this->user)),
+            'post' => $this->whenLoaded('post', fn () => PostResource::make($this->post)),
             'body' => $this->body,
             'updated_at' => $this->updated_at,
-            'created_at' => $this->created_at,
+            'created_at' => Carbon::parse($this->created_at)->diffForHumans(),
         ];
     }
 }

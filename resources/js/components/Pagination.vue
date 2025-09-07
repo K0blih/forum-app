@@ -1,6 +1,6 @@
 <script setup lang="ts">
-import { Link } from '@inertiajs/vue3';
 import { useBreakpoints } from '@/composables/useBreakpoints';
+import { Link } from '@inertiajs/vue3';
 
 defineProps(['meta', 'links']);
 
@@ -23,8 +23,7 @@ const { isDesktop } = useBreakpoints();
                 results
             </p>
         </div>
-        <div v-if="isDesktop"
-             class="flex flex-1 justify-between">
+        <div v-if="isDesktop" class="flex flex-1 justify-between">
             <nav class="isolate inline-flex -space-x-px rounded-md shadow-xs dark:shadow-none" aria-label="Pagination">
                 <Link
                     v-for="link in meta.links"
@@ -36,15 +35,14 @@ const { isDesktop } = useBreakpoints();
                             link.active,
                         'text-sm font-medium text-gray-700 hover:bg-gray-50 dark:border-white/10 dark:bg-white/5 dark:text-gray-200 dark:hover:bg-white/10':
                             !link.active,
-                        'pointer-events-none opacity-50': !link.url,
+                        'pointer-events-none opacity-50': !link.url
                     }"
                 >
                     {{ link.label }}
                 </Link>
             </nav>
         </div>
-        <div v-else
-             class="flex flex-1 justify-between">
+        <div v-else class="flex flex-1 justify-between">
             <Link
                 :href="links.prev || '#'"
                 class="relative inline-flex items-center rounded-md border border-gray-300 bg-white px-4 py-2 text-sm font-medium text-gray-700 hover:bg-gray-50 dark:border-white/10 dark:bg-white/5 dark:text-gray-200 dark:hover:bg-white/10"

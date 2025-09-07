@@ -17,9 +17,10 @@ class DatabaseSeeder extends Seeder
     {
         $users = User::factory(9)->create();
 
-        $posts = Post::factory(200)->recycle($users)->create();
-
-        $comments = Comment::factory(500)->recycle($users)->recycle($posts)->create();
+        $posts = Post::factory(130)
+            ->has(Comment::factory(23)->recycle($users))
+            ->recycle($users)
+            ->create();
 
         $admin = User::factory()
             ->has(Post::factory(3))
