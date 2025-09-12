@@ -1,9 +1,12 @@
 <script setup lang="ts">
 import Container from '@/components/Container.vue';
+import Pagination from '@/components/Pagination.vue';
+import { Button } from '@/components/ui/button';
+import { Textarea } from '@/components/ui/textarea';
 import AppLayout from '@/layouts/AppLayout.vue';
 import type { BreadcrumbItem } from '@/types';
-import { Head } from '@inertiajs/vue3';
-import Pagination from '@/components/Pagination.vue';
+import { Head, useForm } from '@inertiajs/vue3';
+import InputError from '@/components/InputError.vue';
 
 const props = defineProps(['post', 'comments']);
 
@@ -17,6 +20,16 @@ const breadcrumbs: BreadcrumbItem[] = [
         href: `/posts/${props.post.id}`,
     },
 ];
+
+const commentForm = useForm({
+    body: '',
+});
+
+const addComment = () =>
+    commentForm.post(route('posts.comments.store', props.post.id), {
+        preserveScroll: true,
+        onSuccess: () => commentForm.reset(),
+    });
 </script>
 
 <template>
@@ -24,7 +37,7 @@ const breadcrumbs: BreadcrumbItem[] = [
 
     <AppLayout :breadcrumbs="breadcrumbs">
         <Container>
-<!--            Post-->
+            <!--            Post-->
             <h1 class="text-2xl font-bold">
                 {{ post.title }}
             </h1>
@@ -35,18 +48,28 @@ const breadcrumbs: BreadcrumbItem[] = [
                 {{ post.body }}
             </article>
 
-<!--            Comments-->
+            <!--            Comments-->
             <div class="mt-12">
                 <h2 class="text-2xl font-semibold">Comments</h2>
 
-                <ul class="divide-y mt-2 divide-gray-400 dark:divide-gray-700">
+                <form v-if="$page.props.auth.user" @submit.prevent="addComment">
+                    <div class="mt-6">
+                        <Label for="comment" class="sr-only">Comment</Label>
+                        <Textarea id="body" v-model="commentForm.body" rows="4" placeholder="Write a comment..." />
+                        <InputError :message="commentForm.errors.body" class="mt-2"/>
+                    </div>
+
+                    <Button type="submit" variant="default" class="mt-3" :disabled="commentForm.processing"> Add Comment </Button>
+                </form>
+
+                <ul class="mt-2 divide-y divide-gray-400 dark:divide-gray-700">
                     <li v-for="comment in comments.data" :key="comment.id" class="px-2 py-4">
-                        <span class="text-sm">{{ comment.body }}</span>
+                        <span class="text-sm break-all">{{ comment.body }}</span>
                         <span class="mt-2 block text-sm text-gray-600 dark:text-gray-400"> {{ comment.created_at }} by {{ comment.user.name }} </span>
                     </li>
                 </ul>
 
-                <Pagination :meta="comments.meta" :links="comments.links" />
+                <Pagination :meta="comments.meta" :links="comments.links" :only="['comments']" />
             </div>
         </Container>
     </AppLayout>

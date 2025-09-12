@@ -1,4 +1,5 @@
 import { AppPageProps } from '@/types/index';
+import { DefineComponent } from 'vue';
 
 // Extend ImportMeta interface for Vite...
 declare module 'vite/client' {
