@@ -52,7 +52,7 @@ const addComment = () =>
             <div class="mt-12">
                 <h2 class="text-2xl font-semibold">Comments</h2>
 
-                <form v-if="$page.props.auth.user" @submit.prevent="addComment">
+                <form  @submit.prevent="addComment">
                     <div class="mt-6">
                         <Label for="comment" class="sr-only">Comment</Label>
                         <Textarea id="body" v-model="commentForm.body" rows="4" placeholder="Write a comment..." />
