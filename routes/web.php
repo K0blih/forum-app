@@ -22,10 +22,12 @@ Route::get('dashboard', function () {
 Route::get('posts', [PostController::class, 'index'])->name('posts.index');
 Route::get('posts/{post}', [PostController::class, 'show'])->name('posts.show');
 
-Route::post('posts/{post}/comments', [CommentController::class, "store"])
+Route::post('posts/{post}/comments', [CommentController::class, 'store'])
     ->middleware(['auth', 'verified'])
     ->name('posts.comments.store');
-
+Route::delete('/comments/{comment}', [CommentController::class, 'destroy'])
+    ->middleware(['auth', 'verified'])
+    ->name('comments.destroy');
 // Route::get('test', function() {
 //    return [
 //        UserResource::make(User::find(6)),

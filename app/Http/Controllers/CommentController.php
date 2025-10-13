@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Comment;
 use App\Models\Post;
+use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 
 class CommentController extends Controller
@@ -11,7 +12,7 @@ class CommentController extends Controller
     /**
      * Display a listing of the resource.
      */
-    public function index()
+    public function index() : void
     {
         //
     }
@@ -19,7 +20,7 @@ class CommentController extends Controller
     /**
      * Show the form for creating a new resource.
      */
-    public function create()
+    public function create() : void
     {
         //
     }
@@ -27,13 +28,13 @@ class CommentController extends Controller
     /**
      * Store a newly created resource in storage.
      */
-    public function store(Request $request, Post  $post)
+    public function store(Request $request, Post $post) : RedirectResponse
     {
         $validatedData = $request->validate([
-            'body' => ['required', 'string' , 'max:2500'],
+            'body' => ['required', 'string', 'max:2500'],
         ]);
 
-        Comment::make($validatedData)
+        $comment = new Comment($validatedData)
             ->user()->associate($request->user())
             ->post()->associate($post)
             ->save();
@@ -44,7 +45,7 @@ class CommentController extends Controller
     /**
      * Display the specified resource.
      */
-    public function show(Comment $comment)
+    public function show(Comment $comment) : void
     {
         //
     }
@@ -52,7 +53,7 @@ class CommentController extends Controller
     /**
      * Show the form for editing the specified resource.
      */
-    public function edit(Comment $comment)
+    public function edit(Comment $comment) : void
     {
         //
     }
@@ -60,7 +61,7 @@ class CommentController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, Comment $comment)
+    public function update(Request $request, Comment $comment) : void
     {
         //
     }
@@ -68,8 +69,12 @@ class CommentController extends Controller
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(Comment $comment)
+    public function destroy(Comment $comment) : RedirectResponse
     {
-        //
+        $this->authorize('delete', $comment);
+
+        $comment->delete();
+
+        return to_route('posts.show', $comment->post_id);
     }
 }

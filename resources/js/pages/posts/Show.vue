@@ -7,6 +7,7 @@ import AppLayout from '@/layouts/AppLayout.vue';
 import type { BreadcrumbItem } from '@/types';
 import { Head, useForm } from '@inertiajs/vue3';
 import InputError from '@/components/InputError.vue';
+import Comment from '@/components/Comment.vue';
 
 const props = defineProps(['post', 'comments']);
 
@@ -64,8 +65,7 @@ const addComment = () =>
 
                 <ul class="mt-2 divide-y divide-gray-400 dark:divide-gray-700">
                     <li v-for="comment in comments.data" :key="comment.id" class="px-2 py-4">
-                        <span class="text-sm break-all">{{ comment.body }}</span>
-                        <span class="mt-2 block text-sm text-gray-600 dark:text-gray-400"> {{ comment.created_at }} by {{ comment.user.name }} </span>
+                        <Comment :comment="comment" />
                     </li>
                 </ul>
 
