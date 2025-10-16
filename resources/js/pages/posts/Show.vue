@@ -1,13 +1,14 @@
 <script setup lang="ts">
+import Comment from '@/components/Comment.vue';
 import Container from '@/components/Container.vue';
+import InputError from '@/components/InputError.vue';
 import Pagination from '@/components/Pagination.vue';
 import { Button } from '@/components/ui/button';
 import { Textarea } from '@/components/ui/textarea';
+import { Label } from '@/components/ui/label';
 import AppLayout from '@/layouts/AppLayout.vue';
 import type { BreadcrumbItem } from '@/types';
-import { Head, useForm } from '@inertiajs/vue3';
-import InputError from '@/components/InputError.vue';
-import Comment from '@/components/Comment.vue';
+import { Head, router, useForm } from '@inertiajs/vue3';
 
 const props = defineProps(['post', 'comments']);
 
@@ -31,6 +32,11 @@ const addComment = () =>
         preserveScroll: true,
         onSuccess: () => commentForm.reset(),
     });
+
+const deleteComment = (commentId: any) =>
+    router.delete(route('comments.destroy', { comment: commentId, page: props.comments.meta.current_page }), {
+        preserveScroll: true,
+    });
 </script>
 
 <template>
@@ -53,19 +59,19 @@ const addComment = () =>
             <div class="mt-12">
                 <h2 class="text-2xl font-semibold">Comments</h2>
 
-                <form  @submit.prevent="addComment">
+                <form @submit.prevent="addComment">
                     <div class="mt-6">
                         <Label for="comment" class="sr-only">Comment</Label>
                         <Textarea id="body" v-model="commentForm.body" rows="4" placeholder="Write a comment..." />
-                        <InputError :message="commentForm.errors.body" class="mt-2"/>
+                        <InputError :message="commentForm.errors.body" class="mt-2" />
                     </div>
 
-                    <Button type="submit" variant="default" class="mt-3" :disabled="commentForm.processing"> Add Comment </Button>
+                    <Button type="submit" variant="default" class="mt-3 hover:opacity-60" :disabled="commentForm.processing"> Add Comment </Button>
                 </form>
 
                 <ul class="mt-2 divide-y divide-gray-400 dark:divide-gray-700">
                     <li v-for="comment in comments.data" :key="comment.id" class="px-2 py-4">
-                        <Comment :comment="comment" />
+                        <Comment @delete="deleteComment" :comment="comment" />
                     </li>
                 </ul>
 

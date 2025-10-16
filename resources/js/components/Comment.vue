@@ -1,22 +1,20 @@
 <script setup lang="ts">
-import { router, usePage } from '@inertiajs/vue3';
 import { Button } from '@/components/ui/button';
-import { computed } from 'vue';
 
-const props = defineProps(['comment']);
-
-const deleteComment = () => router.delete(route('comments.destroy', props.comment.id));
-const canDelete = computed(() => props.comment.user.id === usePage().props.auth.user?.id);
+defineProps(['comment']);
+defineEmits(['delete']);
 </script>
 
 <template>
     <div>
         <span class="text-sm break-all">{{ comment.body }}</span>
-        <span class="mt-2 block text-sm text-gray-600 dark:text-gray-400"> {{ comment.created_at }} by {{ comment.user.name }} </span>
-        <div class="mt-3">
-            <form v-if="canDelete" @submit.prevent="deleteComment">
-                <Button type="submit" variant="destructive" size="sm">Delete</Button>
-            </form>
+        <div class="flex justify-between items-center">
+            <span class="mt-2 block text-sm text-gray-600 dark:text-gray-400"> {{ comment.created_at }} by {{ comment.user.name }} </span>
+            <div class="text-right empty:hidden">
+                <form v-if="comment.can?.delete" @submit.prevent="$emit('delete', comment.id)">
+                    <Button type="submit" variant="destructive" class="px-3 hover:opacity-60">Delete</Button>
+                </form>
+            </div>
         </div>
     </div>
 </template>

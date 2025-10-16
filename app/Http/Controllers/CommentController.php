@@ -12,7 +12,7 @@ class CommentController extends Controller
     /**
      * Display a listing of the resource.
      */
-    public function index() : void
+    public function index(): void
     {
         //
     }
@@ -20,7 +20,7 @@ class CommentController extends Controller
     /**
      * Show the form for creating a new resource.
      */
-    public function create() : void
+    public function create(): void
     {
         //
     }
@@ -28,7 +28,7 @@ class CommentController extends Controller
     /**
      * Store a newly created resource in storage.
      */
-    public function store(Request $request, Post $post) : RedirectResponse
+    public function store(Request $request, Post $post): RedirectResponse
     {
         $validatedData = $request->validate([
             'body' => ['required', 'string', 'max:2500'],
@@ -45,7 +45,7 @@ class CommentController extends Controller
     /**
      * Display the specified resource.
      */
-    public function show(Comment $comment) : void
+    public function show(Comment $comment): void
     {
         //
     }
@@ -53,7 +53,7 @@ class CommentController extends Controller
     /**
      * Show the form for editing the specified resource.
      */
-    public function edit(Comment $comment) : void
+    public function edit(Comment $comment): void
     {
         //
     }
@@ -61,7 +61,7 @@ class CommentController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, Comment $comment) : void
+    public function update(Request $request, Comment $comment): void
     {
         //
     }
@@ -69,12 +69,12 @@ class CommentController extends Controller
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(Comment $comment) : RedirectResponse
+    public function destroy(Comment $comment, Request $request) : RedirectResponse
     {
         $this->authorize('delete', $comment);
 
         $comment->delete();
 
-        return to_route('posts.show', $comment->post_id);
+        return to_route('posts.show', ['post' => $comment->post_id, 'page' => $request->query('page')]);
     }
 }

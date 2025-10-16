@@ -26,6 +26,9 @@ class CommentResource extends JsonResource
             'body' => $this->body,
             'updated_at' => $this->updated_at,
             'created_at' => Carbon::parse($this->created_at)->diffForHumans(),
+            'can' => [
+                'delete' => $request->user()?->can('delete', $this->resource),
+            ],
         ];
     }
 }
