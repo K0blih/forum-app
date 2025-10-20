@@ -9,6 +9,7 @@ import { Label } from '@/components/ui/label';
 import AppLayout from '@/layouts/AppLayout.vue';
 import type { BreadcrumbItem } from '@/types';
 import { Head, router, useForm } from '@inertiajs/vue3';
+import { computed, ref } from 'vue';
 
 const props = defineProps(['post', 'comments']);
 
@@ -32,6 +33,14 @@ const addComment = () =>
         preserveScroll: true,
         onSuccess: () => commentForm.reset(),
     });
+
+const commentIdBeingEdited = ref(null);
+const commentBeingEdit = computed(() => props.comments.data.find((comment: any) => comment.id === commentIdBeingEdited.value));
+const editComment = (commentId: any) => {
+    commentIdBeingEdited.value = commentId;
+    commentForm.body = commentBeingEdit.value?.body;
+}
+
 
 const deleteComment = (commentId: any) =>
     router.delete(route('comments.destroy', { comment: commentId, page: props.comments.meta.current_page }), {
@@ -71,7 +80,7 @@ const deleteComment = (commentId: any) =>
 
                 <ul class="mt-2 divide-y divide-gray-400 dark:divide-gray-700">
                     <li v-for="comment in comments.data" :key="comment.id" class="px-2 py-4">
-                        <Comment @delete="deleteComment" :comment="comment" />
+                        <Comment @edit="editComment" @delete="deleteComment" :comment="comment" />
                     </li>
                 </ul>
 
