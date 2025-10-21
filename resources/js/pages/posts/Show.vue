@@ -4,8 +4,8 @@ import Container from '@/components/Container.vue';
 import InputError from '@/components/InputError.vue';
 import Pagination from '@/components/Pagination.vue';
 import { Button } from '@/components/ui/button';
-import { Textarea } from '@/components/ui/textarea';
 import { Label } from '@/components/ui/label';
+import { Textarea } from '@/components/ui/textarea';
 import AppLayout from '@/layouts/AppLayout.vue';
 import type { BreadcrumbItem } from '@/types';
 import { Head, router, useForm } from '@inertiajs/vue3';
@@ -34,13 +34,29 @@ const addComment = () =>
         onSuccess: () => commentForm.reset(),
     });
 
+const updateComment = () =>
+    commentForm.put(
+        route('comments.update', {
+            comment: commentIdBeingEdited.value,
+            page: props.comments.meta.current_page,
+        }),
+        {
+            preserveScroll: true,
+            onSuccess: cancelEditComment,
+        },
+    );
+
 const commentIdBeingEdited = ref(null);
 const commentBeingEdit = computed(() => props.comments.data.find((comment: any) => comment.id === commentIdBeingEdited.value));
 const editComment = (commentId: any) => {
     commentIdBeingEdited.value = commentId;
     commentForm.body = commentBeingEdit.value?.body;
-}
-
+    document.querySelector('textarea')?.focus()
+};
+const cancelEditComment = () => {
+    commentIdBeingEdited.value = null;
+    commentForm.reset();
+};
 
 const deleteComment = (commentId: any) =>
     router.delete(route('comments.destroy', { comment: commentId, page: props.comments.meta.current_page }), {
@@ -68,14 +84,22 @@ const deleteComment = (commentId: any) =>
             <div class="mt-12">
                 <h2 class="text-2xl font-semibold">Comments</h2>
 
-                <form @submit.prevent="addComment">
+                <form @submit.prevent="commentIdBeingEdited ? updateComment() : addComment()">
                     <div class="mt-6">
                         <Label for="comment" class="sr-only">Comment</Label>
                         <Textarea id="body" v-model="commentForm.body" rows="4" placeholder="Write a comment..." />
                         <InputError :message="commentForm.errors.body" class="mt-2" />
                     </div>
 
-                    <Button type="submit" variant="default" class="mt-3 hover:opacity-60" :disabled="commentForm.processing"> Add Comment </Button>
+                    <Button
+                        type="submit"
+                        variant="default"
+                        class="mt-3 hover:opacity-60"
+                        :disabled="commentForm.processing"
+                        v-text="commentIdBeingEdited ? 'Update Comment' : 'Add Comment'"
+                    >
+                    </Button>
+                    <Button v-if="commentIdBeingEdited" @click="cancelEditComment" variant="secondary" class="ml-2">Cancel</Button>
                 </form>
 
                 <ul class="mt-2 divide-y divide-gray-400 dark:divide-gray-700">
